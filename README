@@ -1,0 +1,30 @@
+this is a simple program to illustrate how page tables work in x86_64 linux.
+
+the best explanation i've found for x86_64 page tables is
+https://os.phil-opp.com/page-tables/ 
+
+the pagetables program uses CR3 (the register that points to the top level
+page table to resolve a virtual memory address (one of the program's
+functions.
+
+unfortunately, (unless you are security concious then you would be super
+happy!) so we need a kernel module to allow us to access CR3 and the
+physical memory. when you build and insmod cr3.ko in the kernel-module
+directory you will get /proc/cr3 and /proc/page_reader that will give
+you access to CR3 and physical pages.
+
+pagetable.c will use those two files to resolve virtual addresses.
+/proc/page_reader doesn't totally compromise the OS, so you will need
+to run pagetable as root.
+
+here is a sample execution after your git clone:
+
+$ make 
+$ cd kernel-module
+$ make
+$ sudo insmod ./cr3.ko
+$ cd ..
+$ sudo ./pagetables
+...
+lots of interesting data
+...
