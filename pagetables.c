@@ -63,7 +63,7 @@ char *name)
     printf("%s(): ", name);
     split_addr(addr);
     uint64_t phys = resolve_entry(fd, p4, addr, 4);
-    printf("%s(): virt %016lX -> phys %016lX\n", name, addr, phys);
+    printf("%s(): virt %016lX -> phys %016lX\n", name, addr, phys+(addr&0xfff));
     printf("------------------\n");
 }
 
