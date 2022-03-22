@@ -81,16 +81,16 @@ static ssize_t proc_page_reader(struct file *file, char __user *buf, size_t coun
     return rc;
 }
 
-static const struct file_operations prfops = {
-    .read = proc_page_reader,
-    .llseek = default_llseek,
+static const struct proc_ops prfops = {
+    .proc_read = proc_page_reader,
+    .proc_lseek = default_llseek,
 };
 
-static const struct file_operations fops = {
-    .open = myopen,
-    .read = seq_read,
-    .llseek = seq_lseek,
-    .release = seq_release,
+static const struct proc_ops fops = {
+    .proc_open = myopen,
+    .proc_read = seq_read,
+    .proc_lseek = seq_lseek,
+    .proc_release = seq_release,
 };
 
 static int __init my_init( void )
