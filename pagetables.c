@@ -24,11 +24,11 @@ static void split_addr(uint64_t addr)
 
 static void dump_table(uint64_t addr, uint64_t *table)
 {
-    printf("PAGE TABLE for %016lX (non zero entries):\n", addr);
+    printf("PAGE TABLE for %016lX (present entries):\n", addr);
     for (
             int i = 0; i < 512; i++
             ) {
-        if (table[i]) {
+        if (table[i] & 1) {
             printf("  %03X %016lx\n", i, table[i]);
         }
     }
@@ -83,6 +83,10 @@ int main()
         exit(2);
     }
 
+    char buff[4096];
+    int md = open("/proc/self/maps", O_RDONLY);
+    int rc = read(md, buff, sizeof buff);
+    write(1, buff, rc);
     /* CR3 has the address of the top level page table, but we need
      * privileges to read it hence the kernel module */
     uint64_t p4;
@@ -92,6 +96,6 @@ int main()
     }
     printf("CR3 is %lX\n", p4);
 
-    resolve_phys_addr(fd, p4, (uint64_t) main, "main");
+    resolve_phys_addr(fd, p4, (uint64_t) buff, "buff");
     exit(0);
 }
